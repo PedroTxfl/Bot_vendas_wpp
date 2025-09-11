@@ -75,6 +75,19 @@ app.post('/', async (req, res) => {
         }
 
       // --- Início do Formulário ---
+      
+      // NOVO: Passo para capturar o CNPJ
+      } else if (currentState.step === 'AWAITING_CNPJ') {
+        currentState.formData.cnpj = msg_body;
+        await sendMessage(from, 'Qual a Razão Social da empresa?');
+        currentState.step = 'AWAITING_RAZAO_SOCIAL';
+
+      // NOVO: Passo para capturar a Razão Social
+      } else if (currentState.step === 'AWAITING_RAZAO_SOCIAL') {
+        currentState.formData.razaoSocial = msg_body;
+        await sendMessage(from, 'Obrigado. Agora, por favor, digite o CPF do representante legal:');
+        currentState.step = 'AWAITING_CPF';
+
       } else if (currentState.step === 'AWAITING_CPF') {
         currentState.formData.cpf = msg_body;
         await sendMessage(from, 'Qual sua data de nascimento? (DD/MM/AAAA)');
@@ -131,15 +144,21 @@ app.post('/', async (req, res) => {
 
 // --- FUNÇÕES AUXILIARES ---
 
-// Simula o tempo de pagamento e inicia o formulário
+// ALTERADO: A função agora decide qual pergunta fazer primeiro (CPF ou CNPJ)
 function handlePaymentSimulation(userNumber) {
     setTimeout(async () => {
         await sendMessage(userNumber, 'O pagamento foi efetuado! ✅\n\nAgora, para agilizar seu atendimento, precisamos de algumas informações suas.');
-        await sendMessage(userNumber, 'Por favor, digite seu CPF:');
         
-        // Atualiza o estado para começar a coleta de dados
-        if (userState[userNumber]) {
-            userState[userNumber].step = 'AWAITING_CPF';
+        const currentState = userState[userNumber];
+        if (currentState) {
+            // Verifica o produto escolhido e direciona para a pergunta correta
+            if (currentState.product === 'e-CNPJ') {
+                await sendMessage(userNumber, 'Por favor, digite o CNPJ da empresa:');
+                currentState.step = 'AWAITING_CNPJ';
+            } else { // Se for e-CPF ou qualquer outro caso
+                await sendMessage(userNumber, 'Por favor, digite seu CPF:');
+                currentState.step = 'AWAITING_CPF';
+            }
         }
     }, 10000); // 10 segundos
 }
