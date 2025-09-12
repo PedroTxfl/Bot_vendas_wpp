@@ -87,7 +87,7 @@ app.post('/', async (req, res) => {
 
       } else if (currentState.step === 'AWAITING_CPF') {
         currentState.formData.cpf = msg_body;
-        await sendMessage(from, 'Certo, CPF no nome de: Seifywébinsson machado. Qual sua data de nascimento? (DD/MM/AAAA)');
+        await sendMessage(from, 'Certo, CPF no nome de: Seifywébinsson machado. \n\nQual sua data de nascimento? (DD/MM/AAAA)');
         currentState.step = 'AWAITING_DOB';
 
       } else if (currentState.step === 'AWAITING_DOB') {
@@ -105,7 +105,7 @@ app.post('/', async (req, res) => {
       
       } else if (currentState.step === 'AWAITING_CEP') {
         currentState.formData.cep = msg_body;
-        await sendMessage(from, 'Informações do CEP: \nRua: Princesa Isabel\nBairro: Santana\nCidade: Porto Alegre\nEstado: Rio Grande do Sul\nAgora precisamos saber qual o número?');
+        await sendMessage(from, 'Informações do CEP: \n\n*Rua*: Princesa Isabel\n*Bairro*: Santana\n*Cidade*: Porto Alegre\n*Estado*: Rio Grande do Sul\n\nAgora precisamos saber qual o número?');
         currentState.step = 'AWAITING_NUMBER';
         
       // ALTERADO: O fim do formulário agora aciona o PAGAMENTO.
@@ -154,8 +154,12 @@ function handlePostPaymentSimulation(userNumber) {
             setTimeout(async () => {
                 await sendMessage(userNumber, 'Pronto, documentos validados! 📄\n\nSegue o link para realização da vídeo conferência:\nhttps://link.falso.para.video/conf456');
                 
-                // Limpa o estado do usuário para que ele possa começar de novo
-                delete userState[userNumber];
+                setTimeout(async () => {
+                    await sendMessage(userNumber, 'Parabéns! Seu certificado foi emitido com sucesso! 🎉');
+
+                  // Limpa o estado do usuário para que ele possa começar de novo
+                    delete userState[userNumber];
+                }, 10000);
             }, 4000);
         }, 4000);
     }, 10000);
