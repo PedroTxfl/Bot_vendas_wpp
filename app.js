@@ -162,7 +162,6 @@ function getEditableFields(currentState) {
     }
     fields.push({ label: 'CPF', step: 'AWAITING_CPF', value: currentState.formData.cpf });
     fields.push({ label: 'Data de Nascimento', step: 'AWAITING_DOB', value: currentState.formData.dob });
-    fields.push({ label: 'Nome Completo', step: 'AWAITING_NAME', value: currentState.formData.name });
     fields.push({ label: 'E-mail', step: 'AWAITING_EMAIL', value: currentState.formData.email });
     fields.push({ label: 'Celular', step: 'AWAITING_PHONE', value: currentState.formData.phone });
     fields.push({ label: 'CEP', step: 'AWAITING_CEP', value: currentState.formData.cep });
@@ -172,7 +171,7 @@ function getEditableFields(currentState) {
 
 // NOVO: Função que gera e envia a mensagem de confirmação
 async function generateAndSendConfirmationMessage(from, currentState) {
-    let confirmationText = '📝 *Por favor, confirme seus dados:*\n\n';
+    let confirmationText = `📝 *Por favor, confirme seus dados, ${currentState.formData.name}:*\n\n `;
     const fields = getEditableFields(currentState);
 
     fields.forEach((field, index) => {
