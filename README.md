@@ -21,13 +21,15 @@ Este bot foi desenvolvido como uma iniciativa da célula de IA para validar a au
 O fluxo simula as seguintes etapas:
 
 1.  **Seleção do Produto:** O cliente escolhe entre e-CPF e e-CNPJ.
-2.  **Coleta de Dados:** O bot solicita as informações necessárias para o cadastro, com perguntas adicionais para o caso de e-CNPJ.
-3.  **Simulação de Pagamento:** Ao final do cadastro, o bot apresenta o valor e um código PIX para pagamento.
-4.  **Simulação de Pós-Venda:** Após um tempo simulado, o bot confirma o pagamento e envia os links para os próximos passos (upload de documentos, videoconferência, etc.).
+2.  **Seleção da Validade:** O cliente define o tempo de validade do certificado.
+3.  **Seleção do Tipo:** O cliente especifica se deseja um certificado **A1 (Arquivo)** ou **A3 (Sem mídia)**.
+4.  **Coleta de Dados:** O bot solicita as informações necessárias para o cadastro.
+5.  **Simulação de Pagamento:** Ao final do cadastro, o bot apresenta o valor e um código PIX.
+6.  **Simulação de Pós-Venda:** Após um tempo simulado, o bot confirma o pagamento e envia os links para os próximos passos.
 
 ## 📊 Fluxo da Conversa
 
-O diagrama abaixo ilustra a árvore de decisão implementada no bot.
+O diagrama abaixo ilustra a árvore de decisão atualizada, implementada no bot.
 
 ```mermaid
 graph TD
@@ -36,22 +38,24 @@ graph TD
         B --> C{Usuário escolhe o produto};
         C --> D["Bot: Certo! E qual a validade?"];
         D --> E{Usuário escolhe a validade};
-        E --> F["Bot: Ótimo! Vamos iniciar seu cadastro."];
-        F --> G["Bot pergunta e armazena<br/>dados em sequência:<br/>- CNPJ/Razão Social (se aplicável)<br/>- CPF do representante<br/>- Nome, E-mail, Endereço..."];
-        G --> H{Usuário responde<br/>a todas as perguntas};
+        E --> F["Bot: Entendido. E qual o tipo?<br/>1. A1 (Arquivo) / 2. A3 (Sem mídia)"];
+        F --> G{Usuário escolhe o tipo};
+        G --> H["Bot: Ótimo! Vamos iniciar seu cadastro."];
+        H --> I["Bot pergunta e armazena<br/>dados em sequência:<br/>- CNPJ/Razão Social (se aplicável)<br/>- CPF do representante<br/>- Nome, E-mail, Endereço..."];
+        I --> J{Usuário responde<br/>a todas as perguntas};
     end
 
     subgraph Pagamento e Finalização
-        H --> I["Bot: Cadastro preenchido!<br/>Apresenta valor e código PIX"];
-        I --> J((Simulação:<br/>Espera 10s para pagamento));
-        J --> K["Bot: Pagamento efetuado! ✅<br/>Envia link para upload de documentos"];
-        K --> L((Simulação:<br/>Espera 4s para validação));
-        L --> M["Bot: Seus documentos estão<br/>sendo validados... ⏳"];
-        M --> N((Simulação:<br/>Espera mais 4s));
-        N --> O["Bot: Pronto, documentos validados! 📄<br/>Envia link da videoconferência."];
-        O --> P((Simulação:<br/>Espera 10s para emissão));
-        P --> Q["Bot: Parabéns! Certificado emitido! 🎉"];
-        Q --> R(Fim do Fluxo);
+        J --> K["Bot: Cadastro preenchido!<br/>Apresenta valor e código PIX"];
+        K --> L((Simulação:<br/>Espera 10s para pagamento));
+        L --> M["Bot: Pagamento efetuado! ✅<br/>Envia link para upload de documentos"];
+        M --> N((Simulação:<br/>Espera 4s para validação));
+        N --> O["Bot: Seus documentos estão<br/>sendo validados... ⏳"];
+        O --> P((Simulação:<br/>Espera mais 4s));
+        P --> Q["Bot: Pronto, documentos validados! 📄<br/>Envia link da videoconferência."];
+        Q --> R((Simulação:<br/>Espera 10s para emissão));
+        R --> S["Bot: Parabéns! Certificado emitido! 🎉"];
+        S --> T(Fim do Fluxo);
     end
 ```
 
@@ -132,7 +136,7 @@ O deploy desta aplicação foi realizado na plataforma [Render.com](https://rend
 
 ### O que a POC inclui:
 
-  - Fluxo de conversa "caminho feliz" para e-CPF e e-CNPJ.
+  - Fluxo de conversa "caminho feliz" para e-CPF и e-CNPJ.
   - Gerenciamento de estado da conversa em memória.
   - Coleta de dados via formulário sequencial.
   - Simulação de todas as etapas de pagamento e pós-venda.
