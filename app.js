@@ -60,22 +60,34 @@ app.post('/', async (req, res) => {
         } else {
           await sendMessage(from, 'Opção inválida. Por favor, responda com 1 para e-CPF ou 2 para e-CNPJ.');
         }
+        
 
-      // ALTERADO: Passo 2 agora inicia o formulário, em vez de pedir o pagamento.
+      // ALTERADO: Passo 2 agora pergunta o TIPO de certificado.
       } else if (currentState.step === 'AWAITING_VALIDITY') {
         if (['1', '2', '3', '4'].includes(msg_body)) {
-          await sendMessage(from, 'Ótimo! Antes de gerar o pagamento, precisamos de alguns dados para o cadastro.');
-          
-          // Verifica o produto escolhido e direciona para a pergunta correta
-          if (currentState.product === 'e-CNPJ') {
-              await sendMessage(from, 'Por favor, digite o *CNPJ* da empresa:');
-              currentState.step = 'AWAITING_CNPJ';
-          } else { // Se for e-CPF
-              await sendMessage(from, 'Por favor, digite seu *CPF*:');
-              currentState.step = 'AWAITING_CPF';
-          }
+          currentState.formData.validade = msg_body; // Armazena a validade
+          await sendMessage(from, 'Entendido. E qual o tipo de certificado?\n\n1. A1 (Arquivo)\n2. A3 (Sem mídia/Nuvem)');
+          currentState.step = 'AWAITING_CERTIFICATE_TYPE'; // Avança para o novo passo
         } else {
           await sendMessage(from, 'Opção de validade inválida. Por favor, escolha um número de 1 a 4.');
+        }
+
+      // NOVO: Passo 3 para escolher o tipo A1/A3 e iniciar o formulário.
+      } else if (currentState.step === 'AWAITING_CERTIFICATE_TYPE') {
+        if (['1', '2'].includes(msg_body)) {
+            currentState.formData.tipoCertificado = msg_body === '1' ? 'A1' : 'A3'; // Armazena o tipo
+            await sendMessage(from, 'Ótimo! Antes de gerar o pagamento, precisamos de alguns dados para o cadastro.');
+            
+            // Verifica o produto escolhido e direciona para a pergunta correta
+            if (currentState.product === 'e-CNPJ') {
+                await sendMessage(from, 'Por favor, digite o *CNPJ* da empresa:');
+                currentState.step = 'AWAITING_CNPJ';
+            } else { // Se for e-CPF
+                await sendMessage(from, 'Por favor, digite seu *CPF*:');
+                currentState.step = 'AWAITING_CPF';
+            }
+        } else {
+            await sendMessage(from, 'Opção inválida. Por favor, escolha 1 para A1 ou 2 para A3.');
         }
 
       // --- Início do Formulário (Lógica inalterada, apenas a ordem de chamada mudou) ---
@@ -92,7 +104,7 @@ app.post('/', async (req, res) => {
 
       } else if (currentState.step === 'AWAITING_DOB') {
         currentState.formData.name = msg_body;
-        await sendMessage(from, 'Certo, *CPF* no nome de: Seifywébinsson machado.\n\nDigite seu melhor *e-mail*:');
+        await sendMessage(from, 'Certo, *CPF* no nome de: Pedro Tian Xi Fruck Liu.\n\nDigite seu melhor *e-mail*:');
         currentState.step = 'AWAITING_EMAIL';
       } else if (currentState.step === 'AWAITING_EMAIL') {
         currentState.formData.email = msg_body;
