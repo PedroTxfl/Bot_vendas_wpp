@@ -55,7 +55,7 @@ app.post('/', async (req, res) => {
       } else if (currentState.step === 'AWAITING_PRODUCT') {
         if (msg_body === '1' || msg_body === '2') {
           currentState.product = msg_body === '1' ? 'e-CPF' : 'e-CNPJ';
-          await sendMessage(from, 'Certo! E qual a validade do seu produto?\n\n1. 4 meses\n2. 1 ano\n3. 2 anos\n4. 3 anos');
+          await sendMessage(from, `Certo! E qual a validade do seu produto(${currentState.product})?\n\n1. 4 meses\n2. 1 ano\n3. 2 anos\n4. 3 anos`);
           currentState.step = 'AWAITING_VALIDITY';
         } else {
           await sendMessage(from, 'Opção inválida. Por favor, responda com 1 para e-CPF ou 2 para e-CNPJ.');
@@ -68,10 +68,10 @@ app.post('/', async (req, res) => {
           
           // Verifica o produto escolhido e direciona para a pergunta correta
           if (currentState.product === 'e-CNPJ') {
-              await sendMessage(from, 'Por favor, digite o CNPJ da empresa:');
+              await sendMessage(from, 'Por favor, digite o *CNPJ* da empresa:');
               currentState.step = 'AWAITING_CNPJ';
           } else { // Se for e-CPF
-              await sendMessage(from, 'Por favor, digite seu CPF:');
+              await sendMessage(from, 'Por favor, digite seu *CPF*:');
               currentState.step = 'AWAITING_CPF';
           }
         } else {
@@ -82,25 +82,25 @@ app.post('/', async (req, res) => {
 
       } else if (currentState.step === 'AWAITING_CNPJ') {
         currentState.formData.razaoSocial = 'Safeweb Segurança da Informação Ltda';
-        await sendMessage(from, 'Certo, Razão social de: Safeweb Segurança da Informação Ltda. Agora, por favor, digite o CPF do representante legal:');
+        await sendMessage(from, 'Certo, *Razão social* de: Safeweb Segurança da Informação Ltda. Agora, por favor, digite o *CPF* do representante legal:');
         currentState.step = 'AWAITING_CPF';
 
       } else if (currentState.step === 'AWAITING_CPF') {
         currentState.formData.cpf = msg_body;
-        await sendMessage(from, 'Certo, CPF no nome de: Seifywébinsson machado. \n\nQual sua data de nascimento? (DD/MM/AAAA)');
+        await sendMessage(from, 'Certo, *CPF* no nome de: Seifywébinsson machado. \n\nQual sua *data de nascimento*? (DD/MM/AAAA)');
         currentState.step = 'AWAITING_DOB';
 
       } else if (currentState.step === 'AWAITING_DOB') {
         currentState.formData.name = msg_body;
-        await sendMessage(from, 'Digite seu melhor e-mail:');
+        await sendMessage(from, 'Digite seu melhor *e-mail*:');
         currentState.step = 'AWAITING_EMAIL';
       } else if (currentState.step === 'AWAITING_EMAIL') {
         currentState.formData.email = msg_body;
-        await sendMessage(from, 'Qual o seu número de celular com DDD?');
+        await sendMessage(from, 'Qual o seu *número de celular* com DDD?');
         currentState.step = 'AWAITING_PHONE';
       } else if (currentState.step === 'AWAITING_PHONE') {
         currentState.formData.phone = msg_body;
-        await sendMessage(from, 'Agora, seu endereço. Qual o CEP?');
+        await sendMessage(from, 'Agora, seu endereço. Qual o *CEP*?');
         currentState.step = 'AWAITING_CEP';
       
       } else if (currentState.step === 'AWAITING_CEP') {
@@ -116,7 +116,7 @@ app.post('/', async (req, res) => {
         
         // Envia a mensagem de pagamento APÓS o formulário
         const pixCode = '00020126330014br.gov.bcb.pix01111234567890102040000030398604100.0053039865802BR5913NOME COMPLETO6009SAO PAULO62070503***6304ABCD';
-        await sendMessage(from, `Obrigado! Cadastro preenchido.\n\nO valor total é de R$ 100,00.\n\nSegue o código PIX para pagamento:\n\n${pixCode}`);
+        await sendMessage(from, `Obrigado! Cadastro preenchido.\n\nO valor total é de R$ 100,00.\n\nSegue o código *PIX para pagamento*:\n\n${pixCode}`);
         
         // Inicia a simulação do pagamento E validação dos documentos
         handlePostPaymentSimulation(from);
