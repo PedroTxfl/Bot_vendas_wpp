@@ -87,10 +87,8 @@ app.post('/', async (req, res) => {
         await handleFormStep(from, currentState, 'AWAITING_DOB', 'Qual sua *data de nascimento*? (DD/MM/AAAA)');
       } else if (currentState.step === 'AWAITING_DOB') {
         currentState.formData.dob = msg_body;
-        await handleFormStep(from, currentState, 'AWAITING_NAME', 'Qual seu *nome completo*?');
-      } else if (currentState.step === 'AWAITING_NAME') {
-        currentState.formData.name = msg_body;
-        await handleFormStep(from, currentState, 'AWAITING_EMAIL', 'Digite seu melhor *e-mail*:');
+        currentState.formData.name = 'Pedro Tian Xi Fruck Liu'; // Dado fixo para demonstração
+        await handleFormStep(from, currentState, 'AWAITING_EMAIL', 'Nome do titutal do CPF: Pedro Tian Xi Fruck Liu.\n\nAgora, digite seu melhor *e-mail*:');
       } else if (currentState.step === 'AWAITING_EMAIL') {
         currentState.formData.email = msg_body;
         await handleFormStep(from, currentState, 'AWAITING_PHONE', 'Qual o seu *número de celular* com DDD?');
