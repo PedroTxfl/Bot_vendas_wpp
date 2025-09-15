@@ -66,7 +66,7 @@ app.post('/', async (req, res) => {
       } else if (currentState.step === 'AWAITING_VALIDITY') {
         if (['1', '2', '3', '4'].includes(msg_body)) {
           currentState.formData.validade = msg_body; // Armazena a validade
-          await sendMessage(from, 'Entendido. E qual o tipo de certificado?\n\n1. A1 (Arquivo)\n2. A3 (Sem mídia/Nuvem)');
+          await sendMessage(from, 'Entendido. E qual o tipo de certificado?\n\n1. A1 (Arquivo)\n2. A3 (Sem mídia)');
           currentState.step = 'AWAITING_CERTIFICATE_TYPE'; // Avança para o novo passo
         } else {
           await sendMessage(from, 'Opção de validade inválida. Por favor, escolha um número de 1 a 4.');
@@ -128,7 +128,7 @@ app.post('/', async (req, res) => {
         
         // Envia a mensagem de pagamento APÓS o formulário
         const pixCode = '00020126330014br.gov.bcb.pix01111234567890102040000030398604100.0053039865802BR5913NOME COMPLETO6009SAO PAULO62070503***6304ABCD';
-        await sendMessage(from, `Obrigado! Cadastro preenchido.\n\nO valor total é de R$ 100,00.\n\nSegue o código *PIX para pagamento*:\n\n${pixCode}`);
+        await sendMessage(from, `Obrigado! Cadastro preenchido.\n\nO valor total é de R$ 185,00.\n\nSegue o código *PIX para pagamento*:\n\n${pixCode}`);
         
         // Inicia a simulação do pagamento E validação dos documentos
         handlePostPaymentSimulation(from);
