@@ -82,17 +82,17 @@ app.post('/', async (req, res) => {
 
       } else if (currentState.step === 'AWAITING_CNPJ') {
         currentState.formData.razaoSocial = 'Safeweb Segurança da Informação Ltda';
-        await sendMessage(from, 'Certo, *Razão social* de: Safeweb Segurança da Informação Ltda. Agora, por favor, digite o *CPF* do representante legal:');
+        await sendMessage(from, 'Certo, *Razão social* de: Safeweb Segurança da Informação Ltda.\n\nAgora, por favor, digite o *CPF* do representante legal:');
         currentState.step = 'AWAITING_CPF';
 
       } else if (currentState.step === 'AWAITING_CPF') {
         currentState.formData.cpf = msg_body;
-        await sendMessage(from, 'Certo, *CPF* no nome de: Seifywébinsson machado. \n\nQual sua *data de nascimento*? (DD/MM/AAAA)');
+        await sendMessage(from, 'Qual sua *data de nascimento*? (DD/MM/AAAA)');
         currentState.step = 'AWAITING_DOB';
 
       } else if (currentState.step === 'AWAITING_DOB') {
         currentState.formData.name = msg_body;
-        await sendMessage(from, 'Digite seu melhor *e-mail*:');
+        await sendMessage(from, 'Certo, *CPF* no nome de: Seifywébinsson machado.\n\nDigite seu melhor *e-mail*:');
         currentState.step = 'AWAITING_EMAIL';
       } else if (currentState.step === 'AWAITING_EMAIL') {
         currentState.formData.email = msg_body;
