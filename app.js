@@ -48,14 +48,14 @@ app.post('/', async (req, res) => {
 
       // Passo 0: Início da Conversa
       if (currentState.step === 'INIT' && ['oi', 'olá', 'ola', 'bom dia', 'boa tarde', 'boa noite'].includes(msg_body.toLowerCase())) {
-        await sendMessage(from, 'Olá, prazer em vê-lo! Qual produto você deseja comprar:\n\n1. e-CPF\n2. e-CNPJ');
+        await sendMessage(from, 'Olá, prazer em vê-lo💙😁! Qual produto você deseja comprar:\n\n1. e-CPF\n2. e-CNPJ');
         currentState.step = 'AWAITING_PRODUCT';
 
       // Passo 1: Escolha do Produto
       } else if (currentState.step === 'AWAITING_PRODUCT') {
         if (msg_body === '1' || msg_body === '2') {
           currentState.product = msg_body === '1' ? 'e-CPF' : 'e-CNPJ';
-          await sendMessage(from, `Certo! E qual a validade do seu produto(${currentState.product})?\n\n1. 4 meses\n2. 1 ano\n3. 2 anos\n4. 3 anos`);
+          await sendMessage(from, `Certo! E qual a validade do seu produto(${currentState.product})? ⏳\n\n1. 4 meses\n2. 1 ano\n3. 2 anos\n4. 3 anos`);
           currentState.step = 'AWAITING_VALIDITY';
         } else {
           await sendMessage(from, 'Opção inválida. Por favor, responda com 1 para e-CPF ou 2 para e-CNPJ.');
@@ -76,7 +76,7 @@ app.post('/', async (req, res) => {
       } else if (currentState.step === 'AWAITING_CERTIFICATE_TYPE') {
         if (['1', '2'].includes(msg_body)) {
             currentState.formData.tipoCertificado = msg_body === '1' ? 'A1' : 'A3'; // Armazena o tipo
-            await sendMessage(from, 'Ótimo! Antes de gerar o pagamento, precisamos de alguns dados para o cadastro.');
+            await sendMessage(from, 'Ótimo! Antes de gerar o pagamento, precisamos de alguns dados para o cadastro.📋');
             
             // Verifica o produto escolhido e direciona para a pergunta correta
             if (currentState.product === 'e-CNPJ') {
