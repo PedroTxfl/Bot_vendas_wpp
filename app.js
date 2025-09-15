@@ -171,7 +171,7 @@ function getEditableFields(currentState) {
 
 // NOVO: Função que gera e envia a mensagem de confirmação
 async function generateAndSendConfirmationMessage(from, currentState) {
-    let confirmationText = `📝 *Por favor, confirme seus dados, ${currentState.formData.name}:*\n\n `;
+    let confirmationText = `📝 *Por favor, confirme seus dados, ${currentState.formData.name}:*\n\n`;
     const fields = getEditableFields(currentState);
 
     fields.forEach((field, index) => {
@@ -184,7 +184,7 @@ async function generateAndSendConfirmationMessage(from, currentState) {
 
 function handlePostPaymentSimulation(userNumber) {
     setTimeout(async () => {
-        await sendMessage(userNumber, 'O pagamento foi efetuado! ✅');
+        await sendMessage(userNumber, 'O pagamento foi efetuado! ✅\n\n Anote o *protocolo* gerado: 1234566789');
         await sendMessage(userNumber, 'Segue agora o link para upload dos documentos:\nhttps://link.falso.para.upload/doc123');
         setTimeout(async () => {
             await sendMessage(userNumber, 'Seus documentos estão sendo validados... ⏳');
